@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,7 @@ export default function Login() {
   const [nom, setNom] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  /* function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     console.log("Nom :", nom);
@@ -15,7 +14,42 @@ export default function Login() {
 
     alert("Formulaire envoyé !");
   }
+  */ 
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8080/api/auth/login/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: nom,
+          password: password,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'envoi");
+    }
+
+    console.log("Réponse Django :", data);
+    alert("Données envoyées avec succès !");
+
+  } catch (error) {
+    console.error("Erreur :", error);
+    alert("Impossible de contacter le backend Django");
+  }
+  }
+
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
 
